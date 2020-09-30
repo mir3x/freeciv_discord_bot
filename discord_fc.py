@@ -22,7 +22,7 @@ def stripmany(suffix, message):
     message = re.sub(r'\[c[^)]*\]', "",message)
     return message
 
-    
+
 @asyncio.coroutine
 def handle_echo(reader, writer):
     global queue
@@ -33,10 +33,8 @@ def handle_echo(reader, writer):
     print("Received %r from %r" % (message, addr))
     i = message.find('::')
     sub = message[0:i+2]
-    if (len(message) > 0 and message != b'X' and message != sub and bytes(message, 'utf-8') != b'\x00'):
-        print("BBB:", bytes(message, 'utf-8'))
+    if (message and message != b'X' and message != sub and bytes(message, 'utf-8') != b'\x00'):
         message = stripmany(sub, message)
-
         queue.append(message)
 
     if len(dequeue):
@@ -69,7 +67,7 @@ class MyClient(discord.Client):
     async def on_ready(self):
         print('Logged on as', self.user)
 
-    async def on_message(self, message):    
+    async def on_message(self, message):
         #channels where bot replies
         channels = ["bots", "commands", "lt55", "lt54"]
         valid_users = ["StarHelix#8062", "Fieder#7545", "Luas#4343"]
@@ -98,7 +96,7 @@ class MyClient(discord.Client):
                 channel = discord.utils.get(client.get_all_channels(), name=sub)
                 if channel is not None:
                     await channel.send(msg)
-                
+
             await asyncio.sleep(1) # task runs every 1 second
 
             #for channel in server.channels:
